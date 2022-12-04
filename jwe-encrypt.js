@@ -16,7 +16,6 @@ session.input.readAsJSON(async function(error, json) {
 				var field = fields2encrypt[i];
 				var tmpJSON = json;
 				while (field.includes('\\')) {
-						console.error(field);
 					var nestedField = field.split('\\');
 					if (tmpJSON.hasOwnProperty(nestedField[0])) {
 						tmpJSON = tmpJSON[nestedField[0]];
