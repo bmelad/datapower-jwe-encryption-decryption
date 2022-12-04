@@ -14,7 +14,16 @@ session.input.readAsJSON(async function(error, json) {
 			var fields2encrypt = session.parameters.fields.split(',');
 			for (var i = 0; i < fields2encrypt.length; ++i) {
 				var field = fields2encrypt[i];
-				json[field] = await encryptData(JSON.stringify(json[field]));
+				var tmpJSON = json;
+				while (field.includes('\\')) {
+						console.error(field);
+					var nestedField = field.split('\\');
+					if (tmpJSON.hasOwnProperty(nestedField[0])) {
+						tmpJSON = tmpJSON[nestedField[0]];
+						field = field.substring(nestedField[0].length + 1);
+					}
+				}
+				if (tmpJSON.hasOwnProperty(field)) tmpJSON[field] = await encryptData(JSON.stringify(tmpJSON[field]));
 			}
 			session.output.write(json);
 		}
